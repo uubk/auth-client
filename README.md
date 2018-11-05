@@ -1,5 +1,5 @@
 # auth-client
-[![CircleCI status](https://img.shields.io/circleci/project/github/uubk/auth-client/master.svg?style=shield)](https://circleci.com/gh/uubk/auth-server/tree/master)
+[![CircleCI status](https://img.shields.io/circleci/project/github/uubk/auth-client/master.svg?style=shield)](https://circleci.com/gh/uubk/auth-client/tree/master)
 ![License](https://img.shields.io/github/license/uubk/auth-client.svg?style=popout)
 
 Configure local LDAP and Kerberos clients and optionally deploy keytabs. Tested on Debian 9.
