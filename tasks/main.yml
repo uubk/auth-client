@@ -1,4 +1,15 @@
 ---
+  - name: Install client software
+    become: True
+    apt:
+      state: present
+      update_cache: yes
+      cache_valid_time: 1800
+      name:
+        - krb5-user
+        - krb5-pkinit
+        - libldap-common
+
   - name: Upload LDAP CA certificate
     become: True
     copy:
