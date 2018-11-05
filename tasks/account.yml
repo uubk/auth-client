@@ -1,0 +1,63 @@
+---
+  - name: "[Service: {{ item.service }}] Create tempdir"
+    delegate_to: localhost
+    when: item.keytab is defined
+    file:
+      path: "fetch/krb/{{ ansible_fqdn }}"
+      state: directory
+
+  - name: "[Service: {{ item.service }}] Create LDAP service user"
+    delegate_to: localhost
+    ldap_entry:
+      dn: "uid={{ ansible_fqdn }},ou={{ item.service }},ou=TechnicalUsers,{{ auth_client_ldap_basedn }}"
+      server_uri: "ldaps://{{ auth_client_ldap_servers|random }}"
+      objectClass:
+        - top
+        - inetOrgPerson
+      bind_dn: "{{ auth_client_ldap_binddn }}"
+      bind_pw: "{{ auth_client_ldap_bindpwd }}"
+      state: present
+      attributes:
+        uid: "{{ ansible_fqdn }}"
+        cn: "{{ item.service }} on {{ ansible_fqdn }}"
+        sn: "Serviceaccount"
+    register: userchanged
+
+  - name: "[Service: {{ item.service }}] Kerberize LDAP user"
+    when: userchanged.changed
+    delegate_to: localhost
+    expect:
+      command: kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} addprinc -randkey -x dn="uid={{ ansible_fqdn }},ou={{ item.service }},ou=TechnicalUsers,{{ auth_ldap_domain_ldap }}" +requires_preauth "{{ item.service }}/{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}"
+      responses:
+        (for): "{{ auth_client_kerberos_admin_password }}"
+    tags:
+      - skip_ansible_lint
+
+  # A keytab export changes the associated key, invalidating the old keytab.
+  # Therefore, only export if necessary
+  - name: "[Service: {{ item.service }}] Check whether keytab was exported previously"
+    when: item.keytab is defined
+    become: True
+    stat:
+      path: "{{ item.keytab }}"
+    register: keytab
+
+  - name: "[Service: {{ item.service }}] Export LDAP service user keytab"
+    when: (item.keytab is defined) and (not keytab.stat.exists)
+    delegate_to: localhost
+    expect:
+      command: "kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} ktadd -k fetch/krb/{{ ansible_fqdn }}/{{ item.service }}.keytab {{ item.service }}/{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}"
+      responses:
+        (for): "{{ auth_client_kerberos_admin_password }}"
+    args:
+      creates: "fetch/krb/{{ ansible_fqdn }}/{{ item.service }}.keytab"
+
+  - name: "[Service: {{ item.service }}] Upload keytab"
+    when: (item.keytab is defined) and (not keytab.stat.exists)
+    become: True
+    copy:
+      src: "fetch/krb/{{ ansible_fqdn }}/{{ item.service }}.keytab"
+      dest: "{{ item.keytab }}"
+      owner: "{{ item.ktowner }}"
+      group: "{{ item.ktgroup }}"
+      mode: "{{ item.ktmode }}"

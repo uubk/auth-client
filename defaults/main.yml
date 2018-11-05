@@ -1,0 +1,21 @@
+# Configuration, see README
+auth_client_kerberos_admin_servers: []
+auth_client_ldap_servers: []
+auth_client_ldap_basedn: None
+auth_client_ldap_binddn: 'cn=Directory Manager'
+auth_client_ldap_bindpwd: None
+auth_client_kerberos_kdcs: []
+auth_client_kerberos_admin_user: None
+auth_client_kerberos_admin_password: None
+auth_client_kerberos_realm: None
+
+auth_client_ca: /etc/ldap/ca.pem
+
+# Similar syntax as the same variable in `auth-server`. This provides the same
+# features for hosts that can't use kadmin.local.
+auth_client_service_accounts: []
+  #  - service: host
+  #    keytab: /etc/krb5.keytab
+  #    ktowner: dirsrv
+  #    ktgroup: root
+  #    ktmode: "0600"
