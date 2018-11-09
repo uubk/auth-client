@@ -27,7 +27,7 @@
     when: userchanged.changed
     connection: local
     expect:
-      command: kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} addprinc -randkey -x dn="uid={{ ansible_fqdn }},ou={{ item.service }},ou=TechnicalUsers,{{ auth_ldap_domain_ldap }}" +requires_preauth "{{ item.service }}/{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}"
+      command: kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} addprinc -randkey -x dn="uid={{ ansible_fqdn }},ou={{ item.service }},ou=TechnicalUsers,{{ auth_client_ldap_basedn }}" +requires_preauth "{{ item.service }}/{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}"
       responses:
         (for): "{{ auth_client_kerberos_admin_password }}"
     tags:
