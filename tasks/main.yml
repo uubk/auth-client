@@ -9,6 +9,17 @@
         - krb5-user
         - krb5-pkinit
         - libldap-common
+    when: ansible_distribution == "Debian"
+
+  - name: Install client software
+    become: True
+    package:
+      state: present
+      name:
+        - openldap
+        - cyrus-sasl-gssapi
+        - krb5
+    when: ansible_distribution == "Archlinux"
 
   - name: Upload LDAP CA certificate
     become: True
@@ -32,7 +43,7 @@
     become: True
     template:
       src: ldap.conf.j2
-      dest: /etc/ldap/ldap.conf
+      dest: "{{ auth_client_ca | dirname }}/ldap.conf"
       owner: root
       group: root
       mode: 0644
