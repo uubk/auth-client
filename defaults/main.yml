@@ -8,6 +8,7 @@ auth_client_kerberos_kdcs: []
 auth_client_kerberos_admin_user: None
 auth_client_kerberos_admin_password: None
 auth_client_kerberos_realm: None
+auth_client_kerberos_realm_subdomains: []
 
 auth_client_ca: /etc/ldap/ca.pem
 

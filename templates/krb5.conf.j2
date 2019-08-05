@@ -25,4 +25,7 @@
 
 [domain_realm]
 	.{{ auth_client_kerberos_realm|lower }} = {{ auth_client_kerberos_realm }}
+{% for domain in auth_client_kerberos_realm_subdomains %}
+	.{{ domain|lower }} = {{ auth_client_kerberos_realm }}
+{% endfor %}
 
