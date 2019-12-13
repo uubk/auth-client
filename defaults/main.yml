@@ -10,10 +10,15 @@ auth_client_kerberos_admin_password: None
 auth_client_kerberos_realm: None
 auth_client_kerberos_realm_subdomains: []
 
+auth_client_kerberos_enable_smartcard: False
+
 auth_client_ca: /etc/ldap/ca.pem
 
 # Enctypes for recent kerberos
 auth_kerberos_enctypes: "aes256-cts-hmac-sha384-192 aes128-cts-hmac-sha256-128"
+
+# Elliptic curves for SPAKE
+auth_kerberos_curves: "edwards25519"
 
 # Similar syntax as the same variable in `auth-server`. This provides the same
 # features for hosts that can't use kadmin.local.

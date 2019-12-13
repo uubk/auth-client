@@ -19,6 +19,8 @@ Configure local LDAP and Kerberos clients and optionally deploy keytabs. Tested 
 |`auth_client_ca` | `/etc/ldap/ca.pem` | Path to LDAP CA (also used for PKINIT) |
 |`auth_client_service_accounts` | `[]` | List of service accounts to create, see below. |
 |`auth_kerberos_enctypes` | `aes256-cts-hmac-sha384-192 aes128-cts-hmac-sha256-128` | Kerberos enctypes to enable. |
+|`auth_kerberos_curves` | `edwards25519` | Curves to use for kerberos SPAKE |
+|`auth_client_kerberos_enable_smartcard` | `False` | Whether to enable PKCS11 smartcard support |
 
 Service accounts (and keytabs) can be created by putting them into `auth_client_service_accounts` as a dict with the following format:
 ```
