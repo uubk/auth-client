@@ -8,6 +8,8 @@
       name:
         - krb5-user
         - krb5-pkinit
+        - pcscd
+        - libccid
         - libldap-common
     when: ansible_distribution == "Debian"
 
