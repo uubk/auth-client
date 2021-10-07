@@ -13,6 +13,8 @@
 	default_tkt_enctypes = {{ auth_kerberos_enctypes }}
 	default_tgs_enctypes = {{ auth_kerberos_enctypes }}
 	spake_preauth_groups = {{ auth_kerberos_curves }}
+	# gokrb5 chokes without the next line
+	dns_lookup_kdc = true
 
 [realms]
 	{{ auth_client_kerberos_realm }} = {
