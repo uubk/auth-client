@@ -15,6 +15,10 @@
 	spake_preauth_groups = {{ auth_kerberos_curves }}
 	# gokrb5 chokes without the next line
 	dns_lookup_kdc = true
+{% if auth_kerberos_fixed_preauth != -1 %}
+	# gokrb5 also chokes without the next line
+	preferred_preauth_types = {{ auth_kerberos_fixed_preauth }}
+{% endif %}
 
 [realms]
 	{{ auth_client_kerberos_realm }} = {

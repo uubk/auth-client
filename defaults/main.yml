@@ -28,3 +28,7 @@ auth_client_service_accounts: []
   #    ktowner: dirsrv
   #    ktgroup: root
   #    ktmode: "0600"
+
+# Gokrb5 on Debian Buster _also_ fails preauth when not setting this explicitly. On bullseye it works with the same
+# binary. To enable the workaround, change from -1 to your real preauth type (e.g. 20 for aes256-cts-hmac-sha384-192).
+auth_kerberos_fixed_preauth: -1
