@@ -27,7 +27,7 @@
     when: userchanged.changed
     connection: local
     expect:
-      command: kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} addprinc -randkey -x dn="uid={{ ansible_fqdn }},ou={{ item.service }},ou=TechnicalUsers,{{ auth_client_ldap_basedn }}" +requires_preauth "{{ item.service }}/{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}"
+      command: /bin/bash -c 'LC_ALL=C kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} addprinc -randkey -x dn="uid={{ ansible_fqdn }},ou={{ item.service }},ou=TechnicalUsers,{{ auth_client_ldap_basedn }}" +requires_preauth "{{ item.service }}/{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}"'
       responses:
         (for): "{{ auth_client_kerberos_admin_password }}"
     tags:
@@ -46,7 +46,7 @@
     when: (item.keytab is defined) and (not keytab.stat.exists) and not (item.glob is defined)
     connection: local
     expect:
-      command: "kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} ktadd -k fetch/krb/{{ ansible_fqdn }}/{{ item.service }}.keytab {{ item.service }}/{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}"
+      command: /bin/bash -c 'LC_ALL=C kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} ktadd -k fetch/krb/{{ ansible_fqdn }}/{{ item.service }}.keytab {{ item.service }}/{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}'
       responses:
         (for): "{{ auth_client_kerberos_admin_password }}"
     args:
@@ -56,7 +56,7 @@
     when: (item.keytab is defined) and (not keytab.stat.exists) and (item.glob is defined) and (item.glob)
     connection: local
     expect:
-      command: "kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} ktadd -k fetch/krb/{{ ansible_fqdn }}/{{ item.service }}.keytab -glob */{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}"
+      command: /bin/bash -c 'LC_ALL=C kadmin -r {{ auth_client_kerberos_realm }} -p {{ auth_client_kerberos_admin_user }} ktadd -k fetch/krb/{{ ansible_fqdn }}/{{ item.service }}.keytab -glob */{{ ansible_fqdn }}@{{ auth_client_kerberos_realm }}'
       responses:
         (for): "{{ auth_client_kerberos_admin_password }}"
     args:
